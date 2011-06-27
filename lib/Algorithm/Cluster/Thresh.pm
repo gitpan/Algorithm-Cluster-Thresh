@@ -1,6 +1,6 @@
 package Algorithm::Cluster::Thresh;
 BEGIN {
-  $Algorithm::Cluster::Thresh::VERSION = '0.02';
+  $Algorithm::Cluster::Thresh::VERSION = '0.03';
 }
 # ABSTRACT: Adds thresholding to hierarchical clustering of Algorithm::Cluster
 use Algorithm::Cluster;
@@ -10,7 +10,7 @@ use Algorithm::Cluster;
 # Add new method to standard package:
 package Algorithm::Cluster::Tree;
 BEGIN {
-  $Algorithm::Cluster::Tree::VERSION = '0.02';
+  $Algorithm::Cluster::Tree::VERSION = '0.03';
 }
 use strict;
 use warnings;
@@ -47,6 +47,7 @@ sub cutthresh {
 }
 
 1;
+
 __END__
 =pod
 
@@ -56,7 +57,7 @@ Algorithm::Cluster::Thresh - Adds thresholding to hierarchical clustering of Alg
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
@@ -100,7 +101,11 @@ Algorithm::Cluster::Thresh - Hierarchical clustering with variable thresholds
 
 =head1 VERSION
 
-version 0.02
+version 0.03
+
+=head1 REPOSITORY
+
+ https://github.com/chadadavis/Algorithm-Cluster-Thresh
 
 =head1 METHODS
 

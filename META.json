@@ -4,7 +4,7 @@
       "Chad A. Davis <chad.a.davis@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.200007, CPAN::Meta::Converter version 2.110580",
+   "generated_by" : "Dist::Zilla version 4.200008, CPAN::Meta::Converter version 2.110580",
    "license" : [
       "perl_5"
    ],
@@ -36,10 +36,15 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "bug-algorithm-cluster-thresh at rt.cpan.org",
-         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=Algorithm-Cluster-Thresh"
+         "web" : "https://github.com/chadadavis/Algorithm-Cluster-Thresh/issues"
+      },
+      "homepage" : "http://github.com/chadadavis/Algorithm-Cluster-Thresh",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/chadadavis/Algorithm-Cluster-Thresh.git",
+         "web" : "https://github.com/chadadavis/Algorithm-Cluster-Thresh"
       }
    },
-   "version" : "0.02"
+   "version" : "0.03"
 }
 
