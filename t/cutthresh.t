@@ -3,12 +3,11 @@ use strict;
 use warnings;
 use Test::More;
 
-use Algorithm::Cluster;
 use Algorithm::Cluster::Thresh;
 
 # Copied partially from Algorithm::Cluster t/12-treecluster.t
 
-#-------[treecluster on a distance matrix]------------
+# treecluster on a lower diagonal (column major) distance matrix
 
 my $matrix   =  [
         [],
@@ -25,58 +24,101 @@ my $matrix   =  [
         [10.0, 19.3,  2.2,  3.7,  9.1,  1.2,  9.3, 15.7,  6.3, 16.0, 11.5]
 ];
 
-my %params = (
-    method     =>       's', # Single linkage clustering
-    data       =>   $matrix,
-);
 
-my $tree = Algorithm::Cluster::treecluster(%params);
+# Index into data matrix, regardless of order
+sub dist {
+    my ($i,$j) = @_;
+    $matrix->[$i][$j] || $matrix->[$j][$i];
+}
+# Test dist() first
+# 7,3 and 3,7 are the same: 8.7
+is (dist(7,3), 8.7, 'dist row major');
+is (dist(3,7), 8.7, 'dist col major');
 
-# Make sure that @clusters and @centroids are the right length
-is ( scalar(@$matrix) - 1, $tree->length );
+# Basic clustering test, inter-cluster distance > 1.5 (depending on method)
+my $thresh = 1.5;
 
-my $node;
+# Linkage methods
+# http://en.wikipedia.org/wiki/Hierarchical_clustering#Linkage_criteria
 
-# Basic sanity checks
-$node = $tree->get(0);
-is ($node->left, 2);
-is ($node->right, 3);
-is (sprintf("%7.3f", $node->distance), "  1.000");
+# distance between clusters, according to single linkage (mimimum linkage)
+# Distance is the min distance between any two cluster elementes
+sub minlinkage {
+    my ($icluster, $jcluster) = @_;
+    my $min;
+    foreach my $i (@$icluster) {
+        foreach my $j (@$jcluster) {
+            my $dist = dist($i,$j);
+            if (!defined($min) || $dist < $min) { $min = $dist }
+        }
+    }
+    $min;
+}
+is(minlinkage([0..5],[6..11]), 1.1, 'minlinkage');
 
-$node = $tree->get(2);
-is ($node->left, 5);
-is ($node->right, 11);
-is (sprintf("%7.3f", $node->distance), "  1.200");
-
-$node = $tree->get(4);
-is ($node->left, 0);
-is ($node->right, -4);
-is (sprintf("%7.3f", $node->distance), "  1.400");
-
-$node = $tree->get(6);
-is ($node->left, -2);
-is ($node->right, -6);
-is (sprintf("%7.3f", $node->distance), "  1.600");
-
-$node = $tree->get(8);
-is ($node->left, 8);
-is ($node->right, -8);
-is (sprintf("%7.3f", $node->distance), "  1.800");
-
-$node = $tree->get(10);
-is ($node->left, -10);
-is ($node->right, -3);
-is (sprintf("%7.3f", $node->distance), "  2.200");
+# distance between clusters, according to complete linkage (maximum linkage)
+# Distance is the max distance between any two cluster elementes
+sub avglinkage { 
+    my ($icluster, $jcluster) = @_;
+    my $sum = 0;
+    foreach my $i (@$icluster) {
+        foreach my $j (@$jcluster) {
+            my $dist = dist($i,$j);
+            $sum += $dist;
+        }
+    }
+    $sum / (@$icluster * @$jcluster);    
+}
+ok(avglinkage([0..5],[6..11]) > 5.7361, 'avglinkage');
+ok(avglinkage([0..5],[6..11]) < 5.7362, 'avglinkage');
 
 
-# Basic clustering test, inter-cluster distance <= 1.5
-my $clusters = $tree->cutthresh(1.5);
-# Tree cointains only internal nodes
-# Num of internal nodes is one less than leaf nodes
-is ( scalar(@$clusters) - 1, $tree->length);
-is   ($clusters->[0], $clusters->[9] );
-isnt ($clusters->[0], $clusters->[11]);
+# distance between clusters, according to complete linkage (maximum linkage)
+# Distance is the max distance between any two cluster elementes
+sub maxlinkage {
+    my ($icluster, $jcluster) = @_;
+    my $max;
+    foreach my $i (@$icluster) {
+        foreach my $j (@$jcluster) {
+            my $dist = dist($i,$j);
+            if (!defined($max) || $dist > $max) { $max = $dist }
+        }
+    }
+    $max;
+}
+is(maxlinkage([0..5],[6..11]), 19.3, 'maxlinkage');
 
+# single, average (UPGMA), and maximum (complete) linkage
+my %dispatch = ('s'=>\&minlinkage,'a'=>\&avglinkage,'m'=>\&maxlinkage);
+foreach my $method (keys %dispatch) {
+    my $tree = Algorithm::Cluster::treecluster(data=>$matrix,method=>$method);
+    # Test that all data is in the tree
+    is (scalar(@$matrix) - 1, $tree->length, "tree size ($method)");
+
+    # According to current $method
+    my $clusters = $tree->cutthresh($thresh);
+    # Tree cointains only internal nodes
+    # Num of internal nodes is one less than leaf nodes
+    is (scalar(@$clusters) - 1, $tree->length, "num clusters ($method)");
+
+    # Given a cluster id, what data indexes are in it, i.e. reverse map
+    my @clustermap;
+    while (my ($i, $cluster) = each @$clusters) {
+        push @{$clustermap[$cluster]}, $i;
+    }
+    
+    # For every pair of clusters, 
+    # verify that inter-cluster distance (given $method) doesn't exceed $thresh
+    for (my $i = 0; $i < @clustermap - 1; $i++) {
+        for (my $j = $i+1; $j < @clustermap; $j++) {
+            # Dispatch table to call appropriate metric, i.e. minlinkage when 's'            
+            my $dist = $dispatch{$method}->($clustermap[$i],$clustermap[$j]);     
+            ok $dist > $thresh, 
+                sprintf "%5.2f < %5.2f for clusters %2d and %2d ($method)", 
+                    $dist, $thresh, $i, $j;
+        }
+    }
+}
 
 done_testing;
-
+    

@@ -22,7 +22,7 @@
       "runtime" : {
          "requires" : {
             "Algorithm::Cluster" : 0,
-            "perl" : "5.006"
+            "perl" : "5.008"
          }
       },
       "test" : {
@@ -45,6 +45,6 @@
          "web" : "https://github.com/chadadavis/Algorithm-Cluster-Thresh"
       }
    },
-   "version" : "0.03"
+   "version" : "0.04"
 }
 

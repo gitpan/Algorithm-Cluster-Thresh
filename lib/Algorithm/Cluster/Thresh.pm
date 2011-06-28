@@ -1,6 +1,6 @@
 package Algorithm::Cluster::Thresh;
 BEGIN {
-  $Algorithm::Cluster::Thresh::VERSION = '0.03';
+  $Algorithm::Cluster::Thresh::VERSION = '0.04';
 }
 # ABSTRACT: Adds thresholding to hierarchical clustering of Algorithm::Cluster
 use Algorithm::Cluster;
@@ -10,10 +10,11 @@ use Algorithm::Cluster;
 # Add new method to standard package:
 package Algorithm::Cluster::Tree;
 BEGIN {
-  $Algorithm::Cluster::Tree::VERSION = '0.03';
+  $Algorithm::Cluster::Tree::VERSION = '0.04';
 }
 use strict;
 use warnings;
+use 5.008;
 
 sub cutthresh {
     my ($tree, $thresh) = @_;   
@@ -28,20 +29,20 @@ sub cutthresh {
     $nodecluster[$length-1] = $icluster++;
     for (my $i = $length-1; $i >= 0; $i--) {        
         my $node = $tree->get($i);
-        print sprintf "%3d %3d %.3f\n", $i,$nodecluster[$i], $node->distance;
+#        print sprintf "%3d %3d %.3f\n", $i,$nodecluster[$i], $node->distance;
         my $left = $node->left;
         # Nodes are numbered -1,-2,... Leafs are numbered 0,1,2,...
         my $leftref = $left < 0 ? \$nodecluster[-$left-1] : \$leafcluster[$left];
         my $assigncluster = $nodecluster[$i];
         # Left is always the same as the parent node's cluster
         $$leftref = $assigncluster;
-        print sprintf "\tleft  %3d %3d\n", $left, $$leftref;
+#        print sprintf "\tleft  %3d %3d\n", $left, $$leftref;
         my $right = $node->right;
         # Put right into a new cluster, when thresh not satisfied
         if ($node->distance > $thresh) { $assigncluster = $icluster++ }
         my $rightref = $right < 0 ? \$nodecluster[-$right-1] : \$leafcluster[$right];
         $$rightref = $assigncluster;
-        print sprintf "\tright %3d %3d\n", $right, $$rightref;
+#        print sprintf "\tright %3d %3d\n", $right, $$rightref;
     }
     return wantarray ? @leafcluster : \@leafcluster;
 }
@@ -57,7 +58,7 @@ Algorithm::Cluster::Thresh - Adds thresholding to hierarchical clustering of Alg
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -101,9 +102,9 @@ Algorithm::Cluster::Thresh - Hierarchical clustering with variable thresholds
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
-=head1 REPOSITORY
+=head1 SOURCE
 
  https://github.com/chadadavis/Algorithm-Cluster-Thresh
 
