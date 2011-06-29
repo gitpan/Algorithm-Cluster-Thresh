@@ -103,7 +103,8 @@ foreach my $method (keys %dispatch) {
 
     # Given a cluster id, what data indexes are in it, i.e. reverse map
     my @clustermap;
-    while (my ($i, $cluster) = each @$clusters) {
+    for (my $i = 0; $i < @$clusters; $i++) {
+        my $cluster = $clusters->[$i];
         push @{$clustermap[$cluster]}, $i;
     }
     

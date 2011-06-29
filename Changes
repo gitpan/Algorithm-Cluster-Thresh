@@ -1,5 +1,8 @@
 Revision history for Algorithm-Cluster-Thresh
 
+0.05      2011-06-29 10:58:42 Europe/Berlin
+    Fixed: each() on arrays not available in 5.008
+
 0.04      2011-06-28 13:48:24 Europe/Berlin
     Explicit tests for average,single,complete linkage clustering
 

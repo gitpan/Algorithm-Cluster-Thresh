@@ -36,15 +36,15 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/chadadavis/Algorithm-Cluster-Thresh/issues"
+         "web" : "http://github.com/chadadavis/Algorithm-Cluster-Thresh/issues"
       },
       "homepage" : "http://github.com/chadadavis/Algorithm-Cluster-Thresh",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/chadadavis/Algorithm-Cluster-Thresh.git",
-         "web" : "https://github.com/chadadavis/Algorithm-Cluster-Thresh"
+         "url" : "http://github.com/chadadavis/Algorithm-Cluster-Thresh",
+         "web" : "http://github.com/chadadavis/Algorithm-Cluster-Thresh"
       }
    },
-   "version" : "0.04"
+   "version" : "0.05"
 }
 

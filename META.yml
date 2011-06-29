@@ -19,7 +19,7 @@ requires:
   Algorithm::Cluster: 0
   perl: 5.008
 resources:
-  bugtracker: https://github.com/chadadavis/Algorithm-Cluster-Thresh/issues
+  bugtracker: http://github.com/chadadavis/Algorithm-Cluster-Thresh/issues
   homepage: http://github.com/chadadavis/Algorithm-Cluster-Thresh
-  repository: git://github.com/chadadavis/Algorithm-Cluster-Thresh.git
-version: 0.04
+  repository: http://github.com/chadadavis/Algorithm-Cluster-Thresh
+version: 0.05
